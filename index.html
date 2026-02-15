@@ -48,6 +48,645 @@
             display: flex;
             flex-direction: column;
             position: relative;
+            /* Background image with overlay for readability - using multiple background layers */
+            background-color: #f0f5fa; /* fallback */
+        }
+
+        /* Create a separate background div to ensure it's captured */
+        .card-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 80px;
+            background: url('bg.png') no-repeat center center;
+            background-size: cover;
+            opacity: 0.85;
+            z-index: 0;
+            pointer-events: none; /* Allow clicks to pass through */
+        }
+
+        /* Content layer above background */
+        .card-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.75); /* White overlay for readability */
+            border-radius: 80px;
+            padding: 3.2rem 3.5rem;
+            margin: -3.2rem -3.5rem; /* Counteract parent padding */
+            width: calc(100% + 7rem); /* Adjust for negative margin */
+            height: calc(100% + 6.4rem); /* Adjust for negative margin */
+        }
+
+        /* logo centered */
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.8rem;
+            margin-top: -0.2rem;
+        }
+        .qfc-logo {
+            max-width: 260px;
+            height: auto;
+            filter: drop-shadow(0 10px 18px rgba(0, 30, 60, 0.2));
+        }
+
+        /* editable fields */
+        .editable-field {
+            cursor: text;
+            transition: background-color 0.1s, box-shadow 0.1s;
+            outline: none;
+            white-space: nowrap;
+            border-radius: 40px;
+            padding: 0.3rem 1rem;
+            border: 1px solid transparent;
+            font-family: inherit;
+            font-size: inherit;
+            font-weight: inherit;
+            line-height: 1.4;
+            display: inline-flex;
+            align-items: center;
+            background-color: transparent;
+        }
+        .editable-field[contenteditable="true"]:hover {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px dashed #8aa9cc;
+        }
+        .editable-field[contenteditable="true"]:focus {
+            background-color: #ffffff;
+            border: 1px solid #1e4f8a;
+            box-shadow: 0 4px 12px rgba(0,60,130,0.2);
+        }
+
+        /* header – Sunday + Ticketing Support */
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .sunday-badge {
+            background: #eed7b0;
+            color: #593d1c;
+            font-weight: 600;
+            font-size: 1.5rem;
+            padding: 0.6rem 2.2rem;
+            border-radius: 80px;
+            border: 1px solid #e6bf87;
+            box-shadow: inset 0 2px 6px white;
+            font-family: 'Playfair Display', serif;
+        }
+        .title-main {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #0a253b;
+            font-family: 'Playfair Display', serif;
+            text-shadow: 0 2px 8px rgba(255,255,255,0.6);
+            line-height: 1.2;
+            background-color: rgba(255,255,255,0.3);
+            border-radius: 60px;
+            padding: 0.2rem 1.5rem;
+        }
+
+        /* date row */
+        .date-row {
+            margin: 0.5rem 0 2.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            background: rgba(255,255,255,0.5);
+            padding: 0.6rem 2rem 0.6rem 1.8rem;
+            border-radius: 80px;
+            width: fit-content;
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+        .date-label {
+            font-weight: 500;
+            color: #1f3b58;
+            font-size: 1.4rem;
+            background: rgba(255,255,255,0.7);
+            padding: 0.3rem 1.6rem;
+            border-radius: 60px;
+        }
+        .date-value {
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: #0b2c44;
+            font-family: 'Playfair Display', serif;
+            background: rgba(255,255,255,0.4);
+            border-radius: 60px;
+            padding: 0.2rem 1.5rem;
+        }
+
+        /* support rows */
+        .support-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+            margin: 1rem 0 2rem 0;
+            flex: 0 1 auto;
+        }
+
+        .person-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(4px);
+            padding: 1.2rem 2.5rem;
+            border-radius: 100px;
+            border: 1px solid rgba(255,255,255,0.95);
+            box-shadow: 0 10px 22px -12px rgba(0,40,70,0.25);
+            gap: 1rem 2rem;
+        }
+
+        .person-name {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #0f2b46;
+            font-family: 'Playfair Display', serif;
+            background: rgba(255,255,255,0.25);
+            border-radius: 60px;
+            padding: 0.2rem 1rem;
+            line-height: 1.4;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+        }
+        .shift-time {
+            font-size: 2rem;
+            font-weight: 500;
+            color: #1f4670;
+            background: rgba(210, 225, 245, 0.8);
+            padding: 0.4rem 2rem;
+            border-radius: 80px;
+            border: 1px solid rgba(255,255,255,0.9);
+            backdrop-filter: blur(2px);
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+        }
+        .phone {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: #113553;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.4rem 2rem;
+            border-radius: 80px;
+            border: 1px solid rgba(255,255,255,0.95);
+            font-family: 'Inter', monospace;
+            backdrop-filter: blur(2px);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.4;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        /* bottom contacts */
+        .contact-bottom {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem 3.5rem;
+            margin-top: auto;
+            padding-top: 2rem;
+            border-top: 3px solid rgba(255,255,255,0.7);
+            margin-bottom: 0.2rem;
+        }
+        .email-block {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            background: rgba(240, 248, 255, 0.8);
+            backdrop-filter: blur(4px);
+            padding: 0.8rem 2rem 0.8rem 1.8rem;
+            border-radius: 80px;
+            border: 1px solid rgba(255,255,255,0.95);
+            flex-wrap: wrap;
+        }
+        .email-label {
+            font-weight: 500;
+            color: #1f3f60;
+            font-size: 1.6rem;
+            background: rgba(255,255,255,0.5);
+            padding: 0.3rem 1.4rem;
+            border-radius: 60px;
+        }
+        .email-address {
+            font-size: 1.8rem;
+            font-weight: 540;
+            color: #103558;
+            background: rgba(255,255,255,0.7);
+            padding: 0.4rem 1.8rem;
+            border-radius: 80px;
+            border: 1px solid rgba(255,255,255,0.9);
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .phone-block {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            background: rgba(240, 248, 255, 0.8);
+            backdrop-filter: blur(4px);
+            padding: 0.8rem 2rem 0.8rem 1.5rem;
+            border-radius: 80px;
+            border: 1px solid rgba(255,255,255,0.95);
+        }
+        .phone-icon {
+            font-size: 2rem;
+            color: #1f3f60;
+            background: rgba(255,255,255,0.6);
+            padding: 0.4rem 1rem;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .phone-number {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #103558;
+            background: rgba(255,255,255,0.7);
+            padding: 0.4rem 1.8rem;
+            border-radius: 80px;
+            border: 1px solid white;
+            font-family: 'Inter', monospace;
+            display: inline-flex;
+            align-items: center;
+            line-height: 1.4;
+            white-space: nowrap;
+        }
+
+        .edit-hint {
+            margin-top: 1.2rem;
+            font-size: 1rem;
+            color: #2c5075;
+            text-align: center;
+            border-top: 1px dashed rgba(80, 120, 170, 0.5);
+            padding-top: 1rem;
+        }
+        .edit-hint span {
+            background: rgba(255,255,240,0.9);
+            padding: 0.4rem 2rem;
+            border-radius: 60px;
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        .ticket-card {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .save-btn {
+            background: #1e4f8a;
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 600;
+            padding: 1.2rem 4rem;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0,40,70,0.3);
+            transition: transform 0.1s, background 0.2s;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(255,255,255,0.5);
+            margin-top: 1rem;
+        }
+        .save-btn:hover {
+            background: #0a3b6e;
+            transform: scale(1.02);
+        }
+        .save-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Loading indicator */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="ticket-card" id="cardToSave">
+            <!-- Background image div - this ensures bg.png is captured -->
+            <div class="card-bg" id="cardBg"></div>
+            
+            <!-- Content layer with white overlay -->
+            <div class="card-content">
+                <!-- QFC Logo top center -->
+                <div class="logo-container">
+                    <img src="qfclogo.png" alt="QFC Group" class="qfc-logo" id="qfcLogo" crossorigin="anonymous">
+                </div>
+
+                <!-- Sunday + Ticketing Support -->
+                <div class="card-header">
+                    <span class="sunday-badge">Sunday</span>
+                    <div class="title-main editable-field" contenteditable="true" spellcheck="false">Ticketing Support</div>
+                </div>
+
+                <!-- date row -->
+                <div class="date-row">
+                    <span class="date-label">Date</span>
+                    <span class="date-value editable-field" contenteditable="true" spellcheck="false">15th Feb 2026</span>
+                </div>
+
+                <!-- support persons -->
+                <div class="support-grid">
+                    <div class="person-row">
+                        <div class="person-name editable-field" contenteditable="true" spellcheck="false">Ms. Momina Sajjad</div>
+                        <span class="shift-time editable-field" contenteditable="true" spellcheck="false">(11 AM to 07 PM)</span>
+                        <span class="phone editable-field" contenteditable="true" spellcheck="false" style="text-align: center;">+92 310 7773273</span>
+                    </div>
+                    <div class="person-row">
+                        <div class="person-name editable-field" contenteditable="true" spellcheck="false">Mr. Usama Shoukat</div>
+                        <span class="shift-time editable-field" contenteditable="true" spellcheck="false">(07 PM to 02 AM)</span>
+                        <span class="phone editable-field" contenteditable="true" spellcheck="false" style="text-align: center;">+92 343 36559962</span>
+                    </div>
+                </div>
+
+                <!-- bottom contacts -->
+                <div class="contact-bottom">
+                    <div class="email-block">
+                        <span class="email-label">📧 email</span>
+                        <span class="email-address editable-field" contenteditable="true" spellcheck="false">salesupport@qfcgroup.com.pk</span>
+                    </div>
+                    <div class="phone-block">
+                        <span class="phone-icon"><i class="fas fa-phone-alt"></i></span>
+                        <span class="phone-number editable-field" contenteditable="true" spellcheck="false">+92 310 7770702</span>
+                    </div>
+                </div>
+
+                <div class="edit-hint">
+                    <span>✎ 1024x1024 card — click to edit, save with bg.png on Vercel</span>
+                </div>
+            </div>
+        </div>
+
+        <button class="save-btn" id="saveCardBtn">
+            <i class="fas fa-download" style="margin-right: 1rem;"></i> SAVE CARD AS PNG
+        </button>
+    </div>
+
+    <script>
+        (function() {
+            // Make contenteditable fields behave
+            const fields = document.querySelectorAll('.editable-field[contenteditable="true"]');
+            fields.forEach(field => {
+                field.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                    }
+                });
+                field.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+                    document.execCommand('insertText', false, text);
+                });
+            });
+
+            // Preload images to ensure they're ready for capture
+            const preloadImages = async () => {
+                const logo = document.getElementById('qfcLogo');
+                const bg = new Image();
+                
+                // Preload background with cache-busting to ensure fresh load
+                bg.src = 'bg.png?' + new Date().getTime();
+                await new Promise((resolve) => {
+                    if (bg.complete) resolve();
+                    else {
+                        bg.onload = () => {
+                            console.log('✅ bg.png preloaded');
+                            resolve();
+                        };
+                        bg.onerror = (e) => {
+                            console.warn('⚠️ bg.png preload failed', e);
+                            resolve(); // Continue even if error
+                        };
+                    }
+                });
+                
+                // Preload logo
+                if (logo && !logo.complete) {
+                    logo.src = 'qfclogo.png?' + new Date().getTime(); // Cache bust
+                    await new Promise((resolve) => {
+                        logo.onload = () => {
+                            console.log('✅ logo preloaded');
+                            resolve();
+                        };
+                        logo.onerror = (e) => {
+                            console.warn('⚠️ logo preload failed', e);
+                            resolve();
+                        };
+                    });
+                }
+            };
+
+            // SAVE BUTTON - Fixed version that ensures bg.png is captured
+            const saveBtn = document.getElementById('saveCardBtn');
+            const card = document.getElementById('cardToSave');
+            const bgDiv = document.getElementById('cardBg');
+
+            saveBtn.addEventListener('click', async function() {
+                // Remove focus from any editable field
+                if (document.activeElement) {
+                    document.activeElement.blur();
+                }
+
+                // Show loading state
+                const originalText = saveBtn.innerHTML;
+                saveBtn.innerHTML = '<span class="loading"></span> GENERATING...';
+                saveBtn.disabled = true;
+
+                try {
+                    // Preload images to ensure they're in cache
+                    await preloadImages();
+
+                    // Force a small delay to ensure images are rendered
+                    await new Promise(resolve => setTimeout(resolve, 100));
+
+                    // Use html2canvas with settings optimized for background images
+                    const canvas = await html2canvas(card, {
+                        scale: 2,
+                        backgroundColor: null, // Transparent background
+                        allowTaint: false,
+                        useCORS: true,
+                        logging: false,
+                        imageTimeout: 30000, // 30 second timeout
+                        onclone: function(clonedDoc, element) {
+                            // In the cloned document, ensure background div exists and has correct styles
+                            const clonedBg = clonedDoc.getElementById('cardBg');
+                            if (clonedBg) {
+                                clonedBg.style.background = `url('bg.png?${Date.now()}') no-repeat center center`;
+                                clonedBg.style.backgroundSize = 'cover';
+                                clonedBg.style.opacity = '0.85';
+                            }
+                            
+                            // Ensure content overlay has correct styles
+                            const clonedContent = clonedDoc.querySelector('.card-content');
+                            if (clonedContent) {
+                                clonedContent.style.backgroundColor = 'rgba(255, 255, 255, 0.75)';
+                            }
+                        }
+                    });
+
+                    // Download
+                    const link = document.createElement('a');
+                    link.download = 'qfc-ticketing-card.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+
+                    // Success message
+                    saveBtn.innerHTML = '✓ SAVED SUCCESSFULLY';
+                    saveBtn.style.background = '#28a745';
+                    
+                    setTimeout(() => {
+                        saveBtn.innerHTML = originalText;
+                        saveBtn.style.background = '#1e4f8a';
+                        saveBtn.disabled = false;
+                    }, 2000);
+
+                } catch (error) {
+                    console.error('Error generating image:', error);
+                    
+                    alert('⚠️ Error saving image. Trying fallback method...');
+                    
+                    // Fallback: try with different settings
+                    try {
+                        // Try with solid background as fallback
+                        const originalBgDisplay = bgDiv.style.display;
+                        bgDiv.style.display = 'none'; // Hide background
+                        
+                        const canvas = await html2canvas(card, {
+                            scale: 2,
+                            backgroundColor: '#f0f5fa',
+                            allowTaint: false,
+                            useCORS: true,
+                            logging: false
+                        });
+                        
+                        bgDiv.style.display = 'block'; // Restore
+                        
+                        const link = document.createElement('a');
+                        link.download = 'qfc-ticketing-card-fallback.png';
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                        
+                        saveBtn.innerHTML = '✓ SAVED (FALLBACK)';
+                        saveBtn.style.background = '#17a2b8';
+                        
+                        setTimeout(() => {
+                            saveBtn.innerHTML = originalText;
+                            saveBtn.style.background = '#1e4f8a';
+                            saveBtn.disabled = false;
+                        }, 2000);
+                        
+                    } catch (fallbackError) {
+                        console.error('Fallback also failed:', fallbackError);
+                        alert('❌ Failed to save image. Please check:\n\n' +
+                              '1. Make sure bg.png is in the same folder\n' +
+                              '2. Try opening in Chrome\n' +
+                              '3. Check browser console for errors (F12)');
+                        
+                        saveBtn.innerHTML = originalText;
+                        saveBtn.disabled = false;
+                    }
+                }
+            });
+
+            // Verify images are accessible
+            window.addEventListener('load', () => {
+                const logo = document.getElementById('qfcLogo');
+                const bgCheck = new Image();
+                
+                bgCheck.src = 'bg.png?' + Date.now();
+                bgCheck.onload = () => console.log('✅ bg.png loaded successfully');
+                bgCheck.onerror = () => console.warn('⚠️ bg.png not found - check file path');
+                
+                if (logo) {
+                    logo.onload = () => console.log('✅ qfclogo.png loaded');
+                    logo.onerror = () => console.warn('⚠️ qfclogo.png not found');
+                }
+            });
+        })();
+    </script>
+</body>
+</html>!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunday Ticketing · 1024x1024 card · QFC</title>
+    <!-- beautiful fonts: Playfair Display for headings, Inter for clean numbers -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 (free) for phone icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- html2canvas library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+            padding: 2rem;
+        }
+
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        /* main card – exact 1024x1024 */
+        .ticket-card {
+            width: 1024px;
+            height: 1024px;
+            border-radius: 80px;
+            box-shadow: 0 40px 70px -20px rgba(0, 20, 40, 0.35), 0 0 0 2px rgba(255, 255, 255, 0.7) inset;
+            padding: 3.2rem 3.5rem;
+            border: 1px solid rgba(255,255,255,0.6);
+            display: flex;
+            flex-direction: column;
+            position: relative;
             /* Background image with overlay for readability */
             background: url('bg.png');
             background-size: cover;
@@ -551,3 +1190,4 @@
 </body>
 
 </html>
+
