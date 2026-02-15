@@ -43,31 +43,25 @@
             height: 1024px;
             border-radius: 80px;
             box-shadow: 0 40px 70px -20px rgba(0, 20, 40, 0.35), 0 0 0 2px rgba(255, 255, 255, 0.7) inset;
-            padding: 3.2rem 3.5rem;
-            border: 1px solid rgba(255,255,255,0.6);
-            display: flex;
-            flex-direction: column;
             position: relative;
-            background-color: transparent; /* Let background show through */
+            overflow: hidden;
+            background-color: transparent;
         }
 
-        /* Background image div - 100% visible, no blur, no opacity */
-        .card-bg {
+        /* Background image as IMG tag - this guarantees capture */
+        .card-bg-img {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            border-radius: 80px;
-            background: url('bg.png') no-repeat center center;
-            background-size: cover;
-            opacity: 1; /* 100% visible */
+            object-fit: cover; /* This ensures the image covers the entire area */
             z-index: 0;
             pointer-events: none; /* Allow clicks to pass through */
-            filter: none; /* No blur */
+            display: block;
         }
 
-        /* Content layer above background - with semi-transparent background for readability */
+        /* Content layer above background */
         .card-content {
             position: relative;
             z-index: 2;
@@ -75,13 +69,10 @@
             flex-direction: column;
             height: 100%;
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.85); /* Lighter overlay for text readability */
+            background-color: rgba(255, 255, 255, 0.85); /* Semi-transparent overlay for text */
             border-radius: 80px;
             padding: 3.2rem 3.5rem;
-            margin: -3.2rem -3.5rem; /* Counteract parent padding */
-            width: calc(100% + 7rem); /* Adjust for negative margin */
-            height: calc(100% + 6.4rem); /* Adjust for negative margin */
-            backdrop-filter: none; /* No blur */
+            backdrop-filter: none;
         }
 
         /* logo centered */
@@ -165,7 +156,6 @@
             padding: 0.6rem 2rem 0.6rem 1.8rem;
             border-radius: 80px;
             width: fit-content;
-            backdrop-filter: none;
             border: 1px solid rgba(255,255,255,0.8);
         }
         .date-label {
@@ -201,7 +191,6 @@
             justify-content: space-between;
             flex-wrap: wrap;
             background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: none;
             padding: 1.2rem 2.5rem;
             border-radius: 100px;
             border: 1px solid rgba(255,255,255,0.95);
@@ -230,7 +219,6 @@
             padding: 0.4rem 2rem;
             border-radius: 80px;
             border: 1px solid rgba(255,255,255,0.9);
-            backdrop-filter: none;
             white-space: nowrap;
             display: inline-flex;
             align-items: center;
@@ -245,7 +233,6 @@
             border-radius: 80px;
             border: 1px solid rgba(255,255,255,0.95);
             font-family: 'Inter', monospace;
-            backdrop-filter: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -270,7 +257,6 @@
             align-items: center;
             gap: 1.2rem;
             background: rgba(240, 248, 255, 0.9);
-            backdrop-filter: none;
             padding: 0.8rem 2rem 0.8rem 1.8rem;
             border-radius: 80px;
             border: 1px solid rgba(255,255,255,0.95);
@@ -303,7 +289,6 @@
             align-items: center;
             gap: 1.2rem;
             background: rgba(240, 248, 255, 0.9);
-            backdrop-filter: none;
             padding: 0.8rem 2rem 0.8rem 1.5rem;
             border-radius: 80px;
             border: 1px solid rgba(255,255,255,0.95);
@@ -346,11 +331,6 @@
             padding: 0.4rem 2rem;
             border-radius: 60px;
             border: 1px solid rgba(255,255,255,0.8);
-        }
-
-        .ticket-card {
-            overflow: hidden;
-            position: relative;
         }
 
         .save-btn {
@@ -396,8 +376,8 @@
 <body>
     <div class="wrapper">
         <div class="ticket-card" id="cardToSave">
-            <!-- Background image div - 100% visible, no blur -->
-            <div class="card-bg" id="cardBg"></div>
+            <!-- Background image as IMG tag - GUARANTEED to be captured by html2canvas -->
+            <img src="bg.png" class="card-bg-img" id="cardBgImg" alt="background" crossorigin="anonymous">
             
             <!-- Content layer with semi-transparent overlay for text readability -->
             <div class="card-content">
@@ -445,7 +425,7 @@
                 </div>
 
                 <div class="edit-hint">
-                    <span>✎ 1024x1024 card — click to edit, bg.png 100% visible</span>
+                    <span>✎ 1024x1024 card — click to edit, bg.png 100% visible in saved image</span>
                 </div>
             </div>
         </div>
@@ -475,44 +455,55 @@
             // Preload images to ensure they're ready for capture
             const preloadImages = async () => {
                 const logo = document.getElementById('qfcLogo');
-                const bg = new Image();
+                const bgImg = document.getElementById('cardBgImg');
                 
-                // Preload background with cache-busting to ensure fresh load
-                bg.src = 'bg.png?' + new Date().getTime();
-                await new Promise((resolve) => {
-                    if (bg.complete) resolve();
-                    else {
-                        bg.onload = () => {
-                            console.log('✅ bg.png preloaded');
-                            resolve();
-                        };
-                        bg.onerror = (e) => {
-                            console.warn('⚠️ bg.png preload failed', e);
-                            resolve(); // Continue even if error
-                        };
-                    }
-                });
+                // Preload background image with cache-busting
+                if (bgImg) {
+                    bgImg.crossOrigin = "anonymous";
+                    // Force reload with cache bust
+                    const originalSrc = bgImg.src.split('?')[0];
+                    bgImg.src = originalSrc + '?' + new Date().getTime();
+                    
+                    await new Promise((resolve) => {
+                        if (bgImg.complete) resolve();
+                        else {
+                            bgImg.onload = () => {
+                                console.log('✅ Background image loaded');
+                                resolve();
+                            };
+                            bgImg.onerror = (e) => {
+                                console.warn('⚠️ Background image failed to load', e);
+                                resolve(); // Continue even if error
+                            };
+                        }
+                    });
+                }
                 
                 // Preload logo
-                if (logo && !logo.complete) {
-                    logo.src = 'qfclogo.png?' + new Date().getTime(); // Cache bust
+                if (logo) {
+                    logo.crossOrigin = "anonymous";
+                    const originalLogoSrc = logo.src.split('?')[0];
+                    logo.src = originalLogoSrc + '?' + new Date().getTime();
+                    
                     await new Promise((resolve) => {
-                        logo.onload = () => {
-                            console.log('✅ logo preloaded');
-                            resolve();
-                        };
-                        logo.onerror = (e) => {
-                            console.warn('⚠️ logo preload failed', e);
-                            resolve();
-                        };
+                        if (logo.complete) resolve();
+                        else {
+                            logo.onload = () => {
+                                console.log('✅ Logo loaded');
+                                resolve();
+                            };
+                            logo.onerror = (e) => {
+                                console.warn('⚠️ Logo failed to load', e);
+                                resolve();
+                            };
+                        }
                     });
                 }
             };
 
-            // SAVE BUTTON - Fixed version with 100% visible background
+            // SAVE BUTTON - Using IMG tag for guaranteed capture
             const saveBtn = document.getElementById('saveCardBtn');
             const card = document.getElementById('cardToSave');
-            const bgDiv = document.getElementById('cardBg');
 
             saveBtn.addEventListener('click', async function() {
                 // Remove focus from any editable field
@@ -530,31 +521,31 @@
                     await preloadImages();
 
                     // Force a small delay to ensure images are rendered
-                    await new Promise(resolve => setTimeout(resolve, 100));
+                    await new Promise(resolve => setTimeout(resolve, 300));
 
-                    // Use html2canvas with settings optimized for background images
+                    // Use html2canvas - with IMG tag it will definitely capture
                     const canvas = await html2canvas(card, {
                         scale: 2,
-                        backgroundColor: null, // Transparent background
+                        backgroundColor: '#ffffff',
                         allowTaint: false,
                         useCORS: true,
                         logging: false,
-                        imageTimeout: 30000, // 30 second timeout
-                        onclone: function(clonedDoc, element) {
-                            // In the cloned document, ensure background div exists and has correct styles
-                            const clonedBg = clonedDoc.getElementById('cardBg');
+                        imageTimeout: 30000,
+                        onclone: function(clonedDoc) {
+                            // Ensure images have proper CORS in cloned document
+                            const clonedBg = clonedDoc.getElementById('cardBgImg');
                             if (clonedBg) {
-                                clonedBg.style.background = `url('bg.png?${Date.now()}') no-repeat center center`;
-                                clonedBg.style.backgroundSize = 'cover';
-                                clonedBg.style.opacity = '1'; // 100% visible
-                                clonedBg.style.filter = 'none'; // No blur
+                                clonedBg.crossOrigin = "anonymous";
+                                // Force reload with cache bust
+                                const src = clonedBg.src.split('?')[0];
+                                clonedBg.src = src + '?' + Date.now();
                             }
                             
-                            // Ensure content overlay has correct styles
-                            const clonedContent = clonedDoc.querySelector('.card-content');
-                            if (clonedContent) {
-                                clonedContent.style.backgroundColor = 'rgba(255, 255, 255, 0.85)'; // Keep overlay for text
-                                clonedContent.style.backdropFilter = 'none'; // No blur
+                            const clonedLogo = clonedDoc.getElementById('qfcLogo');
+                            if (clonedLogo) {
+                                clonedLogo.crossOrigin = "anonymous";
+                                const logoSrc = clonedLogo.src.split('?')[0];
+                                clonedLogo.src = logoSrc + '?' + Date.now();
                             }
                         }
                     });
@@ -578,16 +569,16 @@
                 } catch (error) {
                     console.error('Error generating image:', error);
                     
-                    alert('⚠️ Error saving image. Trying fallback method...');
+                    alert('⚠️ Error saving image: ' + error.message + '\n\nTrying fallback method...');
                     
                     // Fallback: try with different settings
                     try {
                         const canvas = await html2canvas(card, {
-                            scale: 2,
+                            scale: 1.5,
                             backgroundColor: '#ffffff',
-                            allowTaint: true, // Less strict
-                            useCORS: true,
-                            logging: false
+                            allowTaint: true,
+                            useCORS: false,
+                            logging: true
                         });
                         
                         const link = document.createElement('a');
@@ -609,7 +600,7 @@
                         alert('❌ Failed to save image. Please check:\n\n' +
                               '1. Make sure bg.png is in the same folder\n' +
                               '2. Try opening in Chrome\n' +
-                              '3. Check browser console for errors (F12)');
+                              '3. Right-click the card and take a screenshot manually');
                         
                         saveBtn.innerHTML = originalText;
                         saveBtn.disabled = false;
@@ -620,11 +611,12 @@
             // Verify images are accessible
             window.addEventListener('load', () => {
                 const logo = document.getElementById('qfcLogo');
-                const bgCheck = new Image();
+                const bgImg = document.getElementById('cardBgImg');
                 
-                bgCheck.src = 'bg.png?' + Date.now();
-                bgCheck.onload = () => console.log('✅ bg.png loaded successfully');
-                bgCheck.onerror = () => console.warn('⚠️ bg.png not found - check file path');
+                if (bgImg) {
+                    bgImg.onload = () => console.log('✅ bg.png loaded successfully');
+                    bgImg.onerror = () => console.warn('⚠️ bg.png not found - check file path');
+                }
                 
                 if (logo) {
                     logo.onload = () => console.log('✅ qfclogo.png loaded');
