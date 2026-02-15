@@ -48,11 +48,10 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            /* Background image with overlay for readability - using multiple background layers */
-            background-color: #f0f5fa; /* fallback */
+            background-color: transparent; /* Let background show through */
         }
 
-        /* Create a separate background div to ensure it's captured */
+        /* Background image div - 100% visible, no blur, no opacity */
         .card-bg {
             position: absolute;
             top: 0;
@@ -62,12 +61,13 @@
             border-radius: 80px;
             background: url('bg.png') no-repeat center center;
             background-size: cover;
-            opacity: 0.85;
+            opacity: 1; /* 100% visible */
             z-index: 0;
             pointer-events: none; /* Allow clicks to pass through */
+            filter: none; /* No blur */
         }
 
-        /* Content layer above background */
+        /* Content layer above background - with semi-transparent background for readability */
         .card-content {
             position: relative;
             z-index: 2;
@@ -75,12 +75,13 @@
             flex-direction: column;
             height: 100%;
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.75); /* White overlay for readability */
+            background-color: rgba(255, 255, 255, 0.85); /* Lighter overlay for text readability */
             border-radius: 80px;
             padding: 3.2rem 3.5rem;
             margin: -3.2rem -3.5rem; /* Counteract parent padding */
             width: calc(100% + 7rem); /* Adjust for negative margin */
             height: calc(100% + 6.4rem); /* Adjust for negative margin */
+            backdrop-filter: none; /* No blur */
         }
 
         /* logo centered */
@@ -114,7 +115,7 @@
             background-color: transparent;
         }
         .editable-field[contenteditable="true"]:hover {
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.9);
             border: 1px dashed #8aa9cc;
         }
         .editable-field[contenteditable="true"]:focus {
@@ -164,7 +165,7 @@
             padding: 0.6rem 2rem 0.6rem 1.8rem;
             border-radius: 80px;
             width: fit-content;
-            backdrop-filter: blur(2px);
+            backdrop-filter: none;
             border: 1px solid rgba(255,255,255,0.8);
         }
         .date-label {
@@ -199,8 +200,8 @@
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(4px);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: none;
             padding: 1.2rem 2.5rem;
             border-radius: 100px;
             border: 1px solid rgba(255,255,255,0.95);
@@ -213,7 +214,7 @@
             font-weight: 600;
             color: #0f2b46;
             font-family: 'Playfair Display', serif;
-            background: rgba(255,255,255,0.25);
+            background: rgba(255,255,255,0.3);
             border-radius: 60px;
             padding: 0.2rem 1rem;
             line-height: 1.4;
@@ -225,11 +226,11 @@
             font-size: 2rem;
             font-weight: 500;
             color: #1f4670;
-            background: rgba(210, 225, 245, 0.8);
+            background: rgba(210, 225, 245, 0.9);
             padding: 0.4rem 2rem;
             border-radius: 80px;
             border: 1px solid rgba(255,255,255,0.9);
-            backdrop-filter: blur(2px);
+            backdrop-filter: none;
             white-space: nowrap;
             display: inline-flex;
             align-items: center;
@@ -239,12 +240,12 @@
             font-weight: 600;
             letter-spacing: 0.5px;
             color: #113553;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             padding: 0.4rem 2rem;
             border-radius: 80px;
             border: 1px solid rgba(255,255,255,0.95);
             font-family: 'Inter', monospace;
-            backdrop-filter: blur(2px);
+            backdrop-filter: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -261,15 +262,15 @@
             gap: 2rem 3.5rem;
             margin-top: auto;
             padding-top: 2rem;
-            border-top: 3px solid rgba(255,255,255,0.7);
+            border-top: 3px solid rgba(255,255,255,0.8);
             margin-bottom: 0.2rem;
         }
         .email-block {
             display: flex;
             align-items: center;
             gap: 1.2rem;
-            background: rgba(240, 248, 255, 0.8);
-            backdrop-filter: blur(4px);
+            background: rgba(240, 248, 255, 0.9);
+            backdrop-filter: none;
             padding: 0.8rem 2rem 0.8rem 1.8rem;
             border-radius: 80px;
             border: 1px solid rgba(255,255,255,0.95);
@@ -301,8 +302,8 @@
             display: flex;
             align-items: center;
             gap: 1.2rem;
-            background: rgba(240, 248, 255, 0.8);
-            backdrop-filter: blur(4px);
+            background: rgba(240, 248, 255, 0.9);
+            backdrop-filter: none;
             padding: 0.8rem 2rem 0.8rem 1.5rem;
             border-radius: 80px;
             border: 1px solid rgba(255,255,255,0.95);
@@ -395,10 +396,10 @@
 <body>
     <div class="wrapper">
         <div class="ticket-card" id="cardToSave">
-            <!-- Background image div - this ensures bg.png is captured -->
+            <!-- Background image div - 100% visible, no blur -->
             <div class="card-bg" id="cardBg"></div>
             
-            <!-- Content layer with white overlay -->
+            <!-- Content layer with semi-transparent overlay for text readability -->
             <div class="card-content">
                 <!-- QFC Logo top center -->
                 <div class="logo-container">
@@ -444,7 +445,7 @@
                 </div>
 
                 <div class="edit-hint">
-                    <span>✎ 1024x1024 card — click to edit, save with bg.png on Vercel</span>
+                    <span>✎ 1024x1024 card — click to edit, bg.png 100% visible</span>
                 </div>
             </div>
         </div>
@@ -508,7 +509,7 @@
                 }
             };
 
-            // SAVE BUTTON - Fixed version that ensures bg.png is captured
+            // SAVE BUTTON - Fixed version with 100% visible background
             const saveBtn = document.getElementById('saveCardBtn');
             const card = document.getElementById('cardToSave');
             const bgDiv = document.getElementById('cardBg');
@@ -545,13 +546,15 @@
                             if (clonedBg) {
                                 clonedBg.style.background = `url('bg.png?${Date.now()}') no-repeat center center`;
                                 clonedBg.style.backgroundSize = 'cover';
-                                clonedBg.style.opacity = '0.85';
+                                clonedBg.style.opacity = '1'; // 100% visible
+                                clonedBg.style.filter = 'none'; // No blur
                             }
                             
                             // Ensure content overlay has correct styles
                             const clonedContent = clonedDoc.querySelector('.card-content');
                             if (clonedContent) {
-                                clonedContent.style.backgroundColor = 'rgba(255, 255, 255, 0.75)';
+                                clonedContent.style.backgroundColor = 'rgba(255, 255, 255, 0.85)'; // Keep overlay for text
+                                clonedContent.style.backdropFilter = 'none'; // No blur
                             }
                         }
                     });
@@ -579,19 +582,13 @@
                     
                     // Fallback: try with different settings
                     try {
-                        // Try with solid background as fallback
-                        const originalBgDisplay = bgDiv.style.display;
-                        bgDiv.style.display = 'none'; // Hide background
-                        
                         const canvas = await html2canvas(card, {
                             scale: 2,
-                            backgroundColor: '#f0f5fa',
-                            allowTaint: false,
+                            backgroundColor: '#ffffff',
+                            allowTaint: true, // Less strict
                             useCORS: true,
                             logging: false
                         });
-                        
-                        bgDiv.style.display = 'block'; // Restore
                         
                         const link = document.createElement('a');
                         link.download = 'qfc-ticketing-card-fallback.png';
